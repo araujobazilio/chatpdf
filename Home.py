@@ -1,4 +1,5 @@
 import time
+import os
 
 import streamlit as st
 
@@ -11,11 +12,14 @@ def sidebar():
         type=['.pdf'], 
         accept_multiple_files=True
         )
-    if not uploaded_pdfs is None:
+    if uploaded_pdfs is not None:
+        # Certifique-se de que o diretório existe
+        os.makedirs(PASTA_ARQUIVOS, exist_ok=True)
+        
         for arquivo in PASTA_ARQUIVOS.glob('*.pdf'):
             arquivo.unlink()
         for pdf in uploaded_pdfs:
-            with open(PASTA_ARQUIVOS / pdf.name, 'wb') as f:
+            with open(os.path.join(PASTA_ARQUIVOS, pdf.name), 'wb') as f:
                 f.write(pdf.read())
     
     label_botao = 'Inicializar ChatBot'
